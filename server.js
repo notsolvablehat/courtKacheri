@@ -1,29 +1,26 @@
 const express = require('express');
 const fs = require('fs');
-const path = require('path');
-const app = express();
-const port = 3000;
-
-// Update CORS middleware to allow all origins
 const cors = require('cors');
-app.use(cors());
 
+const app = express();
+const PORT = process.env.PORT || 3000;  // ✅ Use Render's assigned port
+
+// Enable CORS for all origins
+app.use(cors());
+app.use(express.json());
+app.use(express.static('./')); // Serve static files
+
+// Handle CORS Preflight Requests
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    
-    // Handle preflight requests
+
     if (req.method === 'OPTIONS') {
         return res.sendStatus(200);
     }
     next();
 });
-
-// Middleware to parse JSON bodies
-app.use(express.json());
-// Serve static files
-app.use(express.static('./'));
 
 // Route to read data.json
 app.get('/data.json', (req, res) => {
@@ -48,6 +45,7 @@ app.post('/data.json', (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+// Start server on assigned port
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
