@@ -1,3 +1,5 @@
+import { DataService } from './dataService.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     // Tab switching
     const tabs = document.querySelectorAll('.tab');
@@ -41,20 +43,31 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = document.getElementById('login-password').value;
         const userType = document.getElementById('login-type').value;
         
-        const users = await DataService.getUsers();
-        const user = users.find(u => u.email === email && u.password === password && u.type === userType);
-        
-        if (user) {
-            // Store only user ID in sessionStorage instead of localStorage
-            sessionStorage.setItem('currentUserId', user.id);
+        try {
+            const users = await DataService.getUsers();
+            // Check if user exists with matching email, password, AND type
+            const user = users.find(u => 
+                u.email === email && 
+                u.password === password && 
+                u.type === userType
+            );
             
-            if (userType === 'client') {
-                window.location.href = 'client-dashboard.html';
+            if (user) {
+                // Store user data in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                // Redirect based on user type
+                if (user.type === 'lawyer') {
+                    window.location.href = 'lawyer-dashboard.html';
+                } else {
+                    window.location.href = 'client-dashboard.html';
+                }
             } else {
-                window.location.href = 'lawyer-dashboard.html';
+                alert('Invalid credentials. Please check your email, password, and user type.');
             }
-        } else {
-            alert('Invalid credentials or user not found');
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('An error occurred during login. Please try again.');
         }
     });
     
@@ -68,33 +81,45 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = document.getElementById('register-password').value;
         const userType = document.getElementById('register-type').value;
         
-        const users = await DataService.getUsers();
-        
-        if (users.some(u => u.email === email)) {
-            alert('Email already registered');
-            return;
-        }
-        
-        const user = {
-            id: Date.now().toString(),
-            name,
-            email,
-            password,
-            type: userType
-        };
-        
-        if (userType === 'lawyer') {
-            user.specialization = document.getElementById('specialization').value;
-            user.location = document.getElementById('location').value;
-        }
-        
-        const success = await DataService.addUser(user);
-        
-        if (success) {
-            alert('Registration successful! You can now login.');
-            document.querySelector('.tab[data-tab="login"]').click();
-        } else {
-            alert('Registration failed. Please try again.');
+        try {
+            const users = await DataService.getUsers();
+            
+            // Check if email already exists
+            if (users.some(u => u.email === email)) {
+                alert('This email is already registered. Please use a different email.');
+                return;
+            }
+            
+            // Create new user object
+            const newUser = {
+                id: Date.now().toString(),
+                name,
+                email,
+                password,
+                type: userType
+            };
+            
+            // Add lawyer-specific fields if registering as a lawyer
+            if (userType === 'lawyer') {
+                newUser.specialization = document.getElementById('specialization').value;
+                newUser.location = document.getElementById('location').value;
+            }
+            
+            // Save new user
+            const success = await DataService.addUser(newUser);
+            
+            if (success) {
+                alert('Registration successful! Please login with your credentials.');
+                // Switch to login tab
+                document.querySelector('.tab[data-tab="login"]').click();
+                // Clear registration form
+                registerForm.reset();
+            } else {
+                alert('Registration failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            alert('An error occurred during registration. Please try again.');
         }
     });
 }); 

@@ -1,7 +1,34 @@
-class DataService {
+export async function readData() {
+    try {
+        const response = await fetch('http://localhost:3000/data.json');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error reading data:', error);
+        throw error;
+    }
+}
+
+export async function writeData(data) {
+    try {
+        const response = await fetch('http://localhost:3000/data.json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error writing data:', error);
+        throw error;
+    }
+}
+
+export class DataService {
     static async getData() {
         try {
-            const response = await fetch('data.json');
+            const response = await fetch('http://localhost:3000/data.json');
             return await response.json();
         } catch (error) {
             console.error('Error reading data:', error);
@@ -11,42 +38,14 @@ class DataService {
 
     static async saveData(data) {
         try {
-            // In a real application, this would be a POST request to your backend
-            // For GitHub, we'll need to use the GitHub API
-            const token = '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'; // You'll need to create this
-            const owner = 'notsolvablehat';
-            const repo = 'courtKacheri';
-            const path = 'data.json';
-
-            // Get the current file's SHA
-            const currentFile = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+            const response = await fetch('http://localhost:3000/data.json', {
+                method: 'POST',
                 headers: {
-                    'Authorization': `token ${token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-            const fileInfo = await currentFile.json();
-
-            // Update the file
-            const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${token}`,
                     'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json'
                 },
-                body: JSON.stringify({
-                    message: 'Update data.json',
-                    content: btoa(JSON.stringify(data, null, 2)),
-                    sha: fileInfo.sha
-                })
+                body: JSON.stringify(data)
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to save data');
-            }
-
-            return true;
+            return await response.json();
         } catch (error) {
             console.error('Error saving data:', error);
             return false;
@@ -95,6 +94,4 @@ class DataService {
         data.appointments.push(appointment);
         return await this.saveData(data);
     }
-} 
-
-// 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
+}
