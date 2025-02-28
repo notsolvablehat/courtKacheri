@@ -1,5 +1,50 @@
 {
-    "users": [],
-    "cases": [],
-    "appointments": []
+    "users": [
+        {
+            "id": "1740750960894",
+            "name": "solvablehat",
+            "email": "meow@gmail.com",
+            "password": "233",
+            "type": "client"
+        },
+        {
+            "id": "1740751100252",
+            "name": "Yaseen",
+            "email": "this@gmail.com",
+            "password": "this",
+            "type": "lawyer",
+            "specialization": "criminal",
+            "location": "Banglore"
+        }
+    ],
+    "cases": [
+        {
+            "id": "1740750992124",
+            "title": "Divorce",
+            "type": "criminal",
+            "description": "This is criminality",
+            "preferredDate": "2025-02-02",
+            "clientId": "1740750960894",
+            "clientName": "solvablehat",
+            "status": "scheduled",
+            "createdAt": "2025-02-28T13:56:32.125Z",
+            "lawyerId": "1740751100252",
+            "lawyerName": "Yaseen",
+            "appointmentId": "apt-1740751132546"
+        }
+    ],
+    "appointments": [
+        {
+            "id": "apt-1740751132546",
+            "caseId": "1740750992124",
+            "date": "2025-02-28",
+            "time": "20:40",
+            "meetingType": "in-person",
+            "details": "No",
+            "clientId": "1740750960894",
+            "lawyerId": "1740751100252",
+            "status": "scheduled",
+            "createdAt": "2025-02-28T13:58:52.547Z"
+        }
+    ]
 }

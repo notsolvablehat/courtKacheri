@@ -1,6 +1,6 @@
 export async function readData() {
     try {
-        const response = await fetch('http://localhost:3000/data.json');
+        const response = await fetch('https://x4fwm747-3000.inc1.devtunnels.ms/data.json');
         const data = await response.json();
         return data;
     } catch (error) {
@@ -11,7 +11,7 @@ export async function readData() {
 
 export async function writeData(data) {
     try {
-        const response = await fetch('http://localhost:3000/data.json', {
+        const response = await fetch('https://x4fwm747-3000.inc1.devtunnels.ms/data.json', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ export async function writeData(data) {
 export class DataService {
     static async getData() {
         try {
-            const response = await fetch('http://localhost:3000/data.json');
+            const response = await fetch('https://x4fwm747-3000.inc1.devtunnels.ms/data.json');
             return await response.json();
         } catch (error) {
             console.error('Error reading data:', error);
@@ -38,7 +38,7 @@ export class DataService {
 
     static async saveData(data) {
         try {
-            const response = await fetch('http://localhost:3000/data.json', {
+            const response = await fetch('https://x4fwm747-3000.inc1.devtunnels.ms/data.json', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
