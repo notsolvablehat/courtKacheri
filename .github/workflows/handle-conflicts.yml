@@ -1,0 +1,19 @@
+name: Handle Data Conflicts
+
+on:
+  push:
+    paths:
+      - 'data.json'
+
+jobs:
+  handle-conflicts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge conflicts
+        run: |
+          if git merge-base --is-ancestor HEAD HEAD^; then
+            git config --global user.email "action@github.com"
+            git config --global user.name "GitHub Action"
+            git merge --strategy-option ours
+          fi

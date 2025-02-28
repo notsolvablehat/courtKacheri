@@ -13,9 +13,9 @@ class DataService {
         try {
             // In a real application, this would be a POST request to your backend
             // For GitHub, we'll need to use the GitHub API
-            const token = 'YOUR_GITHUB_TOKEN'; // You'll need to create this
-            const owner = 'YOUR_GITHUB_USERNAME';
-            const repo = 'YOUR_REPO_NAME';
+            const token = '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'; // You'll need to create this
+            const owner = 'notsolvablehat';
+            const repo = 'courtKacheri';
             const path = 'data.json';
 
             // Get the current file's SHA
@@ -96,3 +96,5 @@ class DataService {
         return await this.saveData(data);
     }
 } 
+
+// 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
